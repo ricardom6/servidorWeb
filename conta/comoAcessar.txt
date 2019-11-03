@@ -1,0 +1,21 @@
+instruçoes para acesso e alteraçoes de conta:
+
+Rotas:
+Localhost/api/v1/account,("POST") com os parametros:
+{
+		"ID":     "*",
+		"Saldo":  **.**,
+		"Status": false or true
+}, para criar uma conta;
+
+localhost/api/v1/account/{id},("GET"), para ler os dados de uma conta;
+
+localhost/api/v1/account/all", ("GET"), para listar todas as contas
+
+localhost/api/v1/account/{id}/block,("PATCH") passando: "Status" : false, para bloquear; 
+
+localhost/api/v1/account/{id}/block,("PATCH") passando: "Status" : true, para desbloquear;
+
+localhost/api/v1/account/{id}/credit,("PATCH") passando: "Saldo" : **.**, para creditar um valor;
+
+localhost/api/v1/account/{id}/debit,("PATCH") passando: "Saldo" : **.**, para debitar um valor.
