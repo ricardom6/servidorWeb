@@ -15,12 +15,6 @@ func homeLink(W http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(W, "Welcome Bank!")
 }
 
-/*func main() {
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", homeLink)
-	log.Fatal(http.ListenAndServe(":8080", router))
-}*/
-
 type account struct {
 	ID     string    `json:"ID"`
 	Saldo  float32   `json:"Saldo"`
@@ -66,28 +60,6 @@ func getaccount(response http.ResponseWriter, request *http.Request) {
 func getAllaccounts(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	json.NewEncoder(response).Encode(accounts)
-}
-
-func updateaccount(response http.ResponseWriter, request *http.Request) {
-	response.Header().Set("content-type", "application/json")
-	accountID := mux.Vars(request)["id"]
-	var updatedaccount account
-	reqBody, err := ioutil.ReadAll(request.Body)
-	if err != nil {
-		fmt.Fprintf(response, "Informe os dados da conta.")
-	}
-
-	json.Unmarshal(reqBody, &updatedaccount)
-
-	for i, singleaccount := range accounts {
-		if singleaccount.ID == accountID {
-			singleaccount.Data = updatedaccount.Data
-			singleaccount.Saldo = updatedaccount.Saldo
-			singleaccount.Status = updatedaccount.Status
-			accounts = append(accounts[:i], singleaccount)
-			json.NewEncoder(response).Encode(singleaccount)
-		}
-	}
 }
 
 func creditaccount(response http.ResponseWriter, request *http.Request) {
@@ -155,17 +127,6 @@ func blockaccount(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
-//func deleteaccount, codigo disponível para implementação futura
-func deleteaccount(response http.ResponseWriter, request *http.Request) {
-	accountID := mux.Vars(request)["id"]
-	for i, singleaccount := range accounts {
-		if singleaccount.ID == accountID {
-			accounts = append(accounts[:i], accounts[i+1:]...)
-			fmt.Fprintf(response, "O conta com id %v foi deletado com sucesso.", accountID)
-		}
-	}
-}
-
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", homeLink)
@@ -173,7 +134,6 @@ func main() {
 	router.HandleFunc("/api/v1/account/{id}", getaccount).Methods("GET")
 	router.HandleFunc("/api/v1/account/all", getAllaccounts).Methods("GET")
 	router.HandleFunc("/api/v1/account/{id}/block", blockaccount).Methods("PATCH")
-	router.HandleFunc("/api/v1/account/{id}/unblock", blockaccount).Methods("PATCH")
 	router.HandleFunc("/api/v1/account/{id}/credit", creditaccount).Methods("PATCH")
 	router.HandleFunc("/api/v1/account/{id}/debit", debitaccount).Methods("PATCH")
 	fmt.Printf("Servidor disponivel!")
